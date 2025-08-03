@@ -1,0 +1,62 @@
+from circleshape import *
+from constants import *
+import pygame
+
+class Player(CircleShape):
+    def __init__(self, x,y):
+        super().__init__(x, y, PLAYER_RADIUS)
+        self.rotation = 0
+        self.is_sprinting = False
+        self.current_speed = 0
+    
+    #create points for drawing player
+    def triangle(self):
+        forward = pygame.Vector2(0, 1).rotate(self.rotation)
+        right = pygame.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5
+        a = self.position + forward * self.radius
+        b = self.position - forward * self.radius - right
+        c = self.position - forward * self.radius + right
+        return [a, b, c]
+    
+    #draw player
+    def draw(self, screen):
+        pygame.draw.polygon(screen, (71, 197, 255), self.triangle(), 2)
+    
+    #rotate player
+    def rotate(self, dt):
+        self.rotation += PLAYER_TURN_SPEED *dt
+    
+    #update player
+    def update(self, dt):
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_d]:
+            self.rotate(dt,)
+        if keys[pygame.K_a]:
+            self.rotate(dt * -1)
+        if keys[pygame.K_w]:
+            self.move(dt, True)
+        if keys[pygame.K_s]:
+            self.move(dt * -1, True)
+        if keys[pygame.K_LSHIFT]:
+            self.is_sprinting = True
+        else:
+            self.is_sprinting = False
+        if not keys[pygame.K_s] and not keys[pygame.K_w] and self.current_speed > 0:
+            self.move(dt, False)
+        
+        if self.current_speed > 300:
+            self.current_speed = 300
+        if self.current_speed < 0: 
+            self.current_speed = 0
+            
+    #move player
+    def move(self, dt, key_pressed):
+        if self.is_sprinting:
+            dt *= 2
+        if self.current_speed < PLAYER_MAX_SPEED and key_pressed:
+            self.current_speed += 5
+        else:
+            self.current_speed -= 5
+        forward = pygame.Vector2(0, 1).rotate(self.rotation)
+        self.position += forward * self.current_speed * dt
