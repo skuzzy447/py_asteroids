@@ -1,6 +1,7 @@
 from circleshape import *
 from constants import *
 import pygame
+import main
 
 class Player(CircleShape):
     def __init__(self, x,y):
@@ -8,7 +9,7 @@ class Player(CircleShape):
         self.rotation = 0
         self.is_sprinting = False
         self.current_speed = 0
-    
+        self.shoot_timer = 0
     #create points for drawing player
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
@@ -38,6 +39,8 @@ class Player(CircleShape):
             self.move(dt, True)
         if keys[pygame.K_s]:
             self.move(dt * -1, True)
+        if keys[pygame.K_SPACE] and self.shoot_timer <= 0:
+            self.shoot()
         if keys[pygame.K_LSHIFT]:
             self.is_sprinting = True
         else:
@@ -49,6 +52,8 @@ class Player(CircleShape):
             self.current_speed = 300
         if self.current_speed < 0: 
             self.current_speed = 0
+        if self.shoot_timer > 0:
+            self.shoot_timer -= dt
             
     #move player
     def move(self, dt, key_pressed):
@@ -60,3 +65,26 @@ class Player(CircleShape):
             self.current_speed -= 5
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += forward * self.current_speed * dt
+
+    def shoot(self):
+        new_shot = Shot(self.position.x, self.position.y, PLAYER_SHOT_RADIUS)
+        new_shot.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
+        self.shoot_timer = PLAYER_SHOOT_TIMER
+
+    def collide(self):
+        main.lives -= 1
+        print(f"{main.lives} lives remaining")
+        self.kill()
+        if main.lives <= 0:
+            print("Game Over")
+            return False
+        else:
+            return True
+
+class Shot(CircleShape):
+    def __init__(self, x, y, radius):
+        super().__init__(x, y, radius)
+    def draw(self, screen):
+        pygame.draw.circle(screen, (66, 102, 245), self.position, self.radius, 1)
+    def update(self, dt):
+        self.position += self.velocity * dt
