@@ -2,7 +2,7 @@ from circleshape import *
 from constants import *
 import pygame
 import main
-
+pygame.mixer.init()
 class Player(CircleShape):
     def __init__(self, x,y):
         super().__init__(x, y, PLAYER_RADIUS)
@@ -54,6 +54,7 @@ class Player(CircleShape):
             self.current_speed = 0
         if self.shoot_timer > 0:
             self.shoot_timer -= dt
+        
             
     #move player
     def move(self, dt, key_pressed):
@@ -67,6 +68,7 @@ class Player(CircleShape):
         self.position += forward * self.current_speed * dt
 
     def shoot(self):
+        FIRE.play()
         new_shot = Shot(self.position.x, self.position.y, PLAYER_SHOT_RADIUS)
         new_shot.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SHOOT_SPEED
         self.shoot_timer = PLAYER_SHOOT_TIMER

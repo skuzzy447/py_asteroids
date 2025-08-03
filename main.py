@@ -9,6 +9,11 @@ lives = 3
 
 def main():
     pygame.init()
+    pygame.mixer.init()
+    pygame.mixer_music.load("./sounds/music.mp3")
+    pygame.mixer_music.play(-1)
+    pygame.mixer_music.set_volume(0.5)
+    
     dt = 0
     clock = pygame.time.Clock()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -38,7 +43,7 @@ def main():
         for each in asteroids:
             for bullet in bullets:
                 if each.check_collision(bullet):
-                    each.kill()
+                    each.split()
                     bullet.kill() 
             if each.check_collision(player1) and death_timer <= 0:
                 death_timer = PLAYER_DEATH_TIMER

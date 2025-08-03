@@ -1,3 +1,6 @@
+import pygame
+pygame.mixer.init()
+
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 #asteroid variables
@@ -13,3 +16,6 @@ PLAYER_SHOT_RADIUS = 5
 PLAYER_SHOOT_SPEED = 500
 PLAYER_SHOOT_TIMER = 0.3
 PLAYER_DEATH_TIMER = 1.0
+#sounds
+BANG = pygame.mixer.Sound("./sounds/bang.wav")
+FIRE = pygame.mixer.Sound("./sounds/fire.wav")
