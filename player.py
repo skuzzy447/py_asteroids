@@ -3,6 +3,7 @@ from constants import *
 import pygame
 import main
 pygame.mixer.init()
+
 class Player(CircleShape):
     def __init__(self, x,y):
         super().__init__(x, y, PLAYER_RADIUS)
@@ -58,7 +59,14 @@ class Player(CircleShape):
             self.current_speed = 0
         if self.shoot_timer > 0:
             self.shoot_timer -= dt
-        
+        if self.position.x > SCREEN_WIDTH:
+            self.position.x = 0
+        if self.position.y > SCREEN_HEIGHT:
+            self.position.y = 0
+        if self.position.x < 0:
+            self.position.x = SCREEN_WIDTH
+        if self.position.y < 0:
+            self.position.y = SCREEN_HEIGHT
             
     #move player
     def move(self, dt, key_pressed):

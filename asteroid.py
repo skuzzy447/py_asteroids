@@ -10,6 +10,14 @@ class Asteroid(CircleShape):
     def draw(self, screen):
         pygame.draw.circle(screen, (221, 71, 255), self.position, self.radius, 2)
     def update(self, dt):
+        if self.position.x > SCREEN_WIDTH + 65:
+            self.position.x = 0
+        if self.position.y > SCREEN_HEIGHT + 65:
+            self.position.y = 0
+        if self.position.x < 0 - 65:
+            self.position.x = SCREEN_WIDTH
+        if self.position.y < 0 - 65:
+            self.position.y = SCREEN_HEIGHT
         self.position += self.velocity * dt
     def split(self):
         BANG.play()

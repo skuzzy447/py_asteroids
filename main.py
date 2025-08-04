@@ -6,6 +6,7 @@ from asteroidfield import AsteroidField
 lives = 3
 
 def main():
+    lives = 3
     pygame.display.set_caption("It's Party Time!!!")
     running = True
     death_timer = 0
@@ -32,6 +33,7 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     asteroid_field = AsteroidField()
     player1 = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+    font = pygame.font.Font("./font/font.ttf", 56)
     #game loop
     while running:
         #when death timer is greater than 0 player is invinceble
@@ -49,6 +51,7 @@ def main():
                     each.split()
                     bullet.kill() 
             if each.check_collision(player1) and death_timer <= 0:
+                lives -= 1
                 death_timer = PLAYER_DEATH_TIMER
                 running = player1.collide()
                 player1 = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
@@ -57,14 +60,23 @@ def main():
         screen.fill("black")
         #game border
         pygame.draw.rect(screen, (255, 54, 151), (0 + SCREEN_WIDTH * .001, 0 + SCREEN_HEIGHT * .002, SCREEN_WIDTH - SCREEN_WIDTH * .0015, SCREEN_HEIGHT - SCREEN_HEIGHT * .0035), 2)
+        #score counter
+        pygame.draw.rect(screen,(127, 59, 255),(0 + SCREEN_WIDTH * .01, 0 + SCREEN_HEIGHT * .02, SCREEN_WIDTH - SCREEN_WIDTH * .85, SCREEN_HEIGHT - SCREEN_HEIGHT * .91), 2)
+        score_counter = font.render(f"Score: {str(score)}", True, (127, 59, 255))
+        score_counter_rect = score_counter.get_rect()
+        score_counter_rect.center = (SCREEN_WIDTH / 12, SCREEN_HEIGHT / 23)
+        life_counter = font.render(f"Lives: {str(lives)}", True, (127, 59, 255))
+        life_counter_rect = life_counter.get_rect()
+        life_counter_rect.center = (SCREEN_WIDTH / 12, SCREEN_HEIGHT / 12)
+        screen.blit(score_counter, score_counter_rect)
+        screen.blit(life_counter, life_counter_rect)
         for each in drawable:
             each.draw(screen)
         pygame.display.flip()
         dt = (clock.tick(60) / 1000)
     #game over screen
-    font = pygame.font.SysFont("Arial", 50)
-    game_over = font.render("Game Over", False, (127, 59, 255))
-    ending_score = font.render(str(score), False, (127, 59, 255))
+    game_over = font.render("Game Over", True, (127, 59, 255))
+    ending_score = font.render(f"Score: {str(score)}", True, (127, 59, 255))
     game_over_rect = game_over.get_rect()
     ending_score_rect = ending_score.get_rect()
     game_over_rect.center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2- 25)

@@ -33,6 +33,7 @@ class AsteroidField(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.spawn_timer = 0.0
         self.starting_velocity = 10
+        self.max_asteroids = 5
 
     def spawn(self, radius, position, velocity):
         asteroid = Asteroid(position.x, position.y, radius)
@@ -52,21 +53,24 @@ class AsteroidField(pygame.sprite.Sprite):
             kind = random.randint(1, ASTEROID_KINDS)
             self.spawn(ASTEROID_MIN_RADIUS * kind, position, velocity)
     def increase_difficulty(self, score):
-        if score >= 5:
-            self.starting_velocity = 10
-            ASTEROID_SPAWN_RATE = 1
         if score >= 10:
-            self.starting_velocity = 20
-            ASTEROID_SPAWN_RATE = 1.2
-        if score >= 15:
-            self.starting_velocity = 30
-            ASTEROID_SPAWN_RATE = 1.4
-        if score >= 20:
-            self.starting_velocity = 40
-            ASTEROID_SPAWN_RATE = 1.6
-        if score >= 25:
-            self.starting_velocity = 50
+            self.starting_velocity = 8
             ASTEROID_SPAWN_RATE = 1.8
+        if score >= 20:
+            self.starting_velocity = 16
+            ASTEROID_SPAWN_RATE = 1.6
         if score >= 30:
-            self.starting_velocity = 60
-            ASTEROID_SPAWN_RATE = 2
+            self.starting_velocity = 24
+            ASTEROID_SPAWN_RATE = 1.4
+        if score >= 40:
+            self.starting_velocity = 32
+            ASTEROID_SPAWN_RATE = 1.2
+        if score >= 50:
+            self.starting_velocity = 40
+            ASTEROID_SPAWN_RATE = 1.0
+        if score >= 60:
+            self.starting_velocity = 48
+            ASTEROID_SPAWN_RATE = 0.8
+        if score >= 70:
+            self.starting_velocity = 56
+            ASTEROID_SPAWN_RATE = 0.6
