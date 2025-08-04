@@ -9,6 +9,7 @@ class Player(CircleShape):
         self.rotation = 0
         self.is_sprinting = False
         self.current_speed = 0
+        self.is_moving_backwards = False
         self.shoot_timer = 0
     #create points for drawing player
     def triangle(self):
@@ -21,7 +22,8 @@ class Player(CircleShape):
     
     #draw player
     def draw(self, screen):
-        pygame.draw.polygon(screen, (71, 197, 255), self.triangle(), 2)
+        if main.lives > 0:
+            pygame.draw.polygon(screen, (71, 197, 255), self.triangle(), 2)
     
     #rotate player
     def rotate(self, dt):
@@ -36,9 +38,11 @@ class Player(CircleShape):
         if keys[pygame.K_a]:
             self.rotate(dt * -1)
         if keys[pygame.K_w]:
+            self.is_moving_backwards = False
             self.move(dt, True)
         if keys[pygame.K_s]:
-            self.move(dt * -1, True)
+            self.is_moving_backwards = True
+            self.move(dt, True)
         if keys[pygame.K_SPACE] and self.shoot_timer <= 0:
             self.shoot()
         if keys[pygame.K_LSHIFT]:
@@ -65,6 +69,8 @@ class Player(CircleShape):
         else:
             self.current_speed -= 5
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
+        if self.is_moving_backwards:
+            forward = -forward
         self.position += forward * self.current_speed * dt
 
     def shoot(self):
